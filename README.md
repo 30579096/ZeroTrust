@@ -59,6 +59,7 @@ $REMOTE_database="\\log-storage.your-domain.lo)\logs$"
 * Set the following ACL on this file:
   * Remove `Authenticated users`
   * Add `Domain computers` with read only privilege
+These privileges can be set with these commands
 ```ps1
 $script='C:\Windows\SYSVOL\domain\scripts\ZT-ExportLogFWToCalculator.ps1'
 $acl = Get-Acl $script
@@ -138,7 +139,7 @@ $IP_ROLE = @{
 ![](img/task02.png)
 * The task needs to run `powershell -exec bypass -nop -File C:\ZeroTrust\ZT-ComputingRules.ps1`
 
-3) Create shared folder named `log$`
+3) Create shared folder named `log$` linked to `C:\ZeroTrust\data`
 * Set the following ACL on this file:
   * Remove `Authenticated users`
   * Add `Domain computers` with
@@ -149,7 +150,7 @@ $IP_ROLE = @{
 
 ![](img/task04.png)
 
-Theses actions can be done with these commmands:
+Theses actions can be done with these commands:
 ```ps1
 mkdir -force "C:\ZeroTrust\data"
 $acl = Get-Acl "C:\ZeroTrust\data"
