@@ -86,7 +86,7 @@ $rotateFile = "${REMOTE_database}\${env:COMPUTERNAME}_${date}_pfirewall.log"
 $tmpMerge = ("{0}\system32\logfiles\firewall\ZeroTrust_{1}.merge" -f $env:windir, (-join ((65..90) + (97..122) | Get-Random -Count 12 | % {[char]$_})))
 $wfLog = '';
 $isFile = 0
-@("pfirewall.log","pfirewall.log.old") | foreach {
+@("pfirewall.log","pfirewall.log.old","ZeroTrust.staging") | foreach {
 	$log = "${env:windir}\system32\logfiles\firewall\$_"
 	Write-Host "[*] Reading $log"
 	if( [System.IO.File]::Exists($log) ){
@@ -113,7 +113,11 @@ $isFile = 0
 	}
 }
 if( $isFile -gt 0 ){
-	$wfLog | Out-File -FilePath $rotateFile -Encoding ASCII
+	try{
+		$wfLog | Out-File -FilePath $rotateFile -Encoding ASCII
+	}catch{
+		$wfLog | Out-File -Append -FilePath $env:windir\system32\logfiles\firewall\ZeroTrust.staging -Encoding ASCII
+	}
 }else{
 	echo "Log are not enabled !!! logs doesn't exist" | Out-File -FilePath "${rotateFile}.LOG-NOT-ENABLED" -Encoding ASCII
 }
